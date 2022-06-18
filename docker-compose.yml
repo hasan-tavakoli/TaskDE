@@ -51,7 +51,7 @@ services:
       volumes:
       # setup your SQLITE db (optional)
         - ./metabase-data:/metabase-data 
-        - ./metabasedb:/metabase.db/metabase.db.mv.db ./  
+        - ./metabasedb:/metabase.db/* :row  
         - ./dev/urandom:/dev/random:row 
       environment:
         - MB_DB_FILE=/metabase-data/metabase.db
@@ -84,7 +84,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    command: bash -c "pip3 install -r /requirements.txt" && webserver
     ports:
       - 8080:8080
     healthcheck:
@@ -193,7 +193,7 @@ services:
     restart: "no"
   airflow-scheduler:
     <<: *airflow-common
-    command: scheduler &&  bash -c "pip3 install -r /requirements.txt"
+    command: bash -c "pip3 install -r /requirements.txt" && scheduler
     networks:
       - localnet
     healthcheck:
@@ -209,7 +209,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
-    command: celery worker &&  bash -c "pip3 install -r /requirements.txt"
+    command: bash -c "pip3 install -r /requirements.txt" && celery worker
     networks:
       - localnet
     healthcheck:
@@ -232,7 +232,7 @@ services:
 
   airflow-triggerer:
     <<: *airflow-common
-    command: triggerer && bash -c "pip3 install -r /requirements.txt"
+    command: bash -c "pip3 install -r /requirements.txt" && triggerer 
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
       interval: 10s
