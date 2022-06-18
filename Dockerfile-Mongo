@@ -1,0 +1,8 @@
+FROM mongo:latest
+COPY config-replica.js config-data.js /
+COPY data/data.zip data.zip
+RUN apt update && apt install -y zip
+RUN unzip data.zip
+#RUN mongoimport --host mongo1 --db mydb --collection user --type json --file /user.json --jsonArray
+#RUN mongoimport --host mongo1 --db mydb --collection step --type json --file /step.json --jsonArray
+#RUN mongoimport --host mongo1 --db mydb --collection bloodpressure --type json --file /bloodpressure.json --jsonArray
